@@ -3,8 +3,8 @@ setwd("~/Desktop/research")
 grade_K <- read.csv("VCL_K - Vaccine Coverage Kindergarten.csv")
 
 #look for how often middle four #s appear and see unique middle_4 combos
-grade_K%>%mutate(middle_4 = str_sub(Facility.Number, 4, 7))%>%
-  arrange(middle_4)->grade_K
+grade_K %>% mutate(middle_4 = str_sub(Facility.Number, 4, 7)) %>%
+  arrange(middle_4) -> grade_K
 code.freq<-table(grade_K$middle_4)
 code.freq[code.freq==1]
 View(grade_K)
@@ -13,7 +13,7 @@ setwd("~/Desktop/research")
 grade_7 <- read.csv("VCL_7 - Vaccine Coverage Seventh Grade.csv")
 colnames(Grade_7)[1]<-"fac.id"
 colnames(grade_K)[1]<-"fac.id"
-inner_join(grade_K,Grade_7, by="fac.id")-> tmp
+inner_join(grade_K,Grade_7, by="fac.id") -> tmp
 View(tmp)
 
 #set directory and read TEA csv file. tmp has middle_4 because of grade_K
