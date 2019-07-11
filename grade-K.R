@@ -3,8 +3,8 @@ setwd("~/Desktop/research")
 grade_K <- read.csv("VCL_K - Vaccine Coverage Kindergarten.csv")
 
 #look for how often middle four #s appear and see unique middle_4 combos
-mutate(grade_K,middle_4 = str_sub(Facility.Number, 4, 7))%>%
-  arrange(middle_4)
+grade_K%>%mutate(middle_4 = str_sub(Facility.Number, 4, 7))%>%
+  arrange(middle_4)->grade_K
 code.freq<-table(grade_K$middle_4)
 code.freq[code.freq==1]
 View(grade_K)
