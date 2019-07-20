@@ -25,12 +25,12 @@ AllData%>%mutate(Public = (substring(`Facility Number`, 1,1) == "9" ))%>%
 ##  Use all the data to plot least squares line with confidence bands
 
 AllData%>%mutate(Public = (substring(`Facility Number`, 1,1) == "9" ))%>%
-    group_by(Grade, Public)%>%
-  summarize(int=coef(lm(MMR~Year))[1], slope=coef(lm(MMR~Year))[2])
+  ggplot(aes(x=Year, y = MMR)) +
+  geom_smooth(aes( col=Grade, linetype = Public), method = lm)
 
-#for plotting graph. above code is for slope,etc.
-# ggplot(aes(x=Year, y = MMR)) +
- # geom_smooth(aes( col=Grade, linetype = Public), method = lm)
+#to find coefficients of graph,
+#    group_by(Grade, Public)%>%
+#   summarize(int=coef(lm(MMR~Year))[1], slope=coef(lm(MMR~Year))[2])
 
 x=1:10
 y=x+rnorm(10,0,.5)
