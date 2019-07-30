@@ -14,8 +14,9 @@ vac.NetworkSIR=function(CM=BarabasiAlbert(N=300,K=2),tau=0.15,gamma=0.01,vac=df$
     R=matrix(rep(0,N),nrow=N,ncol=1) #First recovered
     g=sample(4,N,rep=TRUE) #vector of group membership of length N; how do we know we won't just end up with one group of 1s? hmm...
     vacdata<-data.frame(g=1:4, grade=c(1,1,2,2),vac=c(.2,.2,.8,.8))
-    pb<-left_join(data.frame(g),vacdata,by="g")
-    (runif(N)<pb$vac)->vacnode #returns TRUE if vaccinated
+    ##pb<-left_join(data.frame(g),vacdata,by="g")
+    ##(runif(N)<pb$vac)->vacnode #returns TRUE if vaccinated
+    (runif(N)<vac)->vacnode
     S[vacnode,1]<-0
     R[vacnode,1]<-1
     numvac=sum(R[,1])
