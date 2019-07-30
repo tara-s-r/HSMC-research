@@ -2,7 +2,7 @@ library(randnet)
 library(igraph)
 library(tidyverse)
 library(epimdr)
-vac.NetworkSIR=function(CM=BarabasiAlbert(N=300,K=2),tau=0.3,gamma=0.3,vac=0.5){
+vac.NetworkSIR=function(CM=BarabasiAlbert(N=300,K=2),tau=0.15,gamma=0.01,vac=df$x1){
     #generate SIR epidemic on a CM-network
     #CM = contact matrix
     #tau = probability of infection across an edge
