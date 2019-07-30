@@ -8,6 +8,7 @@ vac.NetworkSIR=function(CM=BarabasiAlbert(N=300,K=2),tau=0.15,gamma=0.01,vac=df$
     #tau = probability of infection across an edge
     #gamma = probability of removal (recovery) per time step
     #vac = percent of population vaccinated
+    CM=res$A
     N=dim(CM)[1]
     I=matrix(rep(0,N),nrow=N,ncol=1) #First infecteds
     S=matrix(rep(1,N),nrow=N,ncol=1) #First susceptibles
