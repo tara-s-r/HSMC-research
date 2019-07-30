@@ -2,7 +2,7 @@ library(randnet)
 library(igraph)
 library(tidyverse)
 library(epimdr)
-vac.NetworkSIR=function(CM=BarabasiAlbert(N=300,K=2),tau=0.3,gamma=0.1,vac=0.9){
+vac.NetworkSIR=function(CM=BarabasiAlbert(N=300,K=2),tau=0.3,gamma=0.3,vac=0.5){
     #generate SIR epidemic on a CM-network
     #CM = contact matrix
     #tau = probability of infection across an edge
@@ -12,26 +12,26 @@ vac.NetworkSIR=function(CM=BarabasiAlbert(N=300,K=2),tau=0.3,gamma=0.1,vac=0.9){
     I=matrix(rep(0,N),nrow=N,ncol=1) #First infecteds
     S=matrix(rep(1,N),nrow=N,ncol=1) #First susceptibles
     R=matrix(rep(0,N),nrow=N,ncol=1) #First recovered
-    I1=sample(1:N, size=1) #Pick first random infected
+    g=sample(4,N,rep=TRUE) #vector of group membership of length N; how do we know we won't just end up with one group of 1s? hmm...
+    vacdata<-data.frame(g=1:4, grade=c(1,1,2,2),vac=c(.2,.2,.8,.8))
+    pb<-left_join(data.frame(g),vacdata,by="g")
+    (runif(N)<pb$vac)->vacnode #returns TRUE if vaccinated
+    S[vacnode,1]<-0
+    R[vacnode,1]<-1
+    numvac=sum(R[,1])
+    numsus=sum(S[,1])
+    I1<-sample((1:N)[!vacnode],1)
     I[I1,1]=1
     S[I1,1]=0
     
-    #want Vrand to never consider I1
-    Vrand=sample(1:N,size=ceiling(N*vac))
-    while(I1 %in% Vrand==TRUE){
-        Vrand=sample(1:N,size=ceiling(N*vac))
-    }
-    R[Vrand,1]<- 1
-    S[Vrand,1]<-0
-    #####issues
     t=1
-    while(sum(I[,t-1])>0 | t==1){
+    while(sum(I[,t-1])>0 | t==1){ #run for first case or while you have in infected node from the last timestep
         t=t+1
-        infneigh=CM%*%I[,t-1] #CM*infected nodes = how many infected nodes is some node connected to
-        pinf=1-(1-tau)^infneigh #prob that the disease will transmit to ???? at least 1 node ???
-        newI=rbinom(N, S[,t-1], pinf) #from the set of N nodes
-        newR=rbinom(N, I[,t-1], gamma)
-        nextS=S[,t-1]-newI
+        infneigh=CM%*%I[,t-1] #CM*infected nodes = how many infected nodes each node is connected to
+        pinf=1-(1-tau)^infneigh #prob that a node will be infected by its neighbors
+        newI=rbinom(N, S[,t-1], pinf) #probability of new nodes becoming infected
+        newR=rbinom(N, I[,t-1], gamma) #prabability of new nodes becoming recovered (remember max(recovered)=sum(infected))
+        nextS=S[,t-1]-newI #new susceptible population
         nextI=I[,t-1]+newI-newR
         nextR=R[,t-1]+newR
         I=cbind(I, nextI)
@@ -40,7 +40,7 @@ vac.NetworkSIR=function(CM=BarabasiAlbert(N=300,K=2),tau=0.3,gamma=0.1,vac=0.9){
     }
     res=list(I=I,S=S,R=R)
     class(res)="netSIR"
-    return(res)
+    res
 }
 
 summary.netSIR=function(x){
@@ -54,15 +54,15 @@ summary.netSIR=function(x){
 
 plot.netSIR=function(x){
     y=summary(x)
-    plot(y$S, type="b", xlab="time", ylab="")
+    plot(y$R, type="b", col="blue", xlab="time", ylab="number of nodes")
     lines(y$I, type="b", col="red")
-    lines(y$R, type="b", col="blue")
+    lines(y$S, type="b", col="black")
     legend("right", legend=c("S", "I", "R"),
-    lty=c(1,1,1), pch=c(1,1,1),
-    col=c("black", "red", "blue"))
+           lty=c(1,1,1), pch=c(1,1,1),
+           col=c("black", "red", "blue"))
 }
 
-dt <- BlockModel.Gen(30, 300, .2, K =3, .6, simple = FALSE, power = TRUE)
-dis = NetworkSIR(dt$A, .3, .1)
+dt <- BlockModel.Gen(5, 10, .2, K =4, .6, simple = FALSE, power = TRUE)
+dis = vac.NetworkSIR(dt$A, .3, .1,.2)
 summary(dis)
 plot(dis)
