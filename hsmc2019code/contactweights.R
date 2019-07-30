@@ -159,3 +159,14 @@ left_join(data.frame(g=res$g, deg=colSums(res$A)), res$grade.key, by = "g")%>%gr
   left_join(data.frame(g=res$g),pb, by="g")
   max=colSums[I]
 }
+
+
+{
+  n.camp=rates.by.grades$DZCAMPUS[1]
+  n=rates.by.grades$totStuD[1]
+  res=my.gen(n,n.camp)
+  CM=res$A
+  pb<-left_join(res$grade.key,data.frame(grade=(-1:12),vac=t(rates.by.grades[1,17:30])),by="grade")
+  left_join(data.frame(g=res$g),pb, by="g")
+  max=colSums[I]
+}
