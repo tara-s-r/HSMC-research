@@ -145,28 +145,12 @@ A <- A + t(A)
 return(list(A = A, g = membership, P = A.bar, theta = node.degree, grade.key = g.mini))
 }
 
-### runs command to get contact network
-res<- my.gen(450, 5)
-
-### summarizes the network, mean degree by grade
-left_join(data.frame(g=res$g, deg=colSums(res$A)), res$grade.key, by = "g")%>%group_by(grade)%>%summarise(cnt = n(), deg = mean(deg))
 {
   n.camp=rates.by.grades$DZCAMPUS[1]
   n=rates.by.grades$totStuD[1]
   res=my.gen(n,n.camp)
   CM=res$A
-  pb<-left_join(res$grade.key,data.frame(grade=(-1:12),vac=t(rates.by.grades[1,17:30])),by="grade")
-  left_join(data.frame(g=res$g),pb, by="g")
-  max=colSums[I]
-}
-
-
-{
-  n.camp=rates.by.grades$DZCAMPUS[1]
-  n=rates.by.grades$totStuD[1]
-  res=my.gen(n,n.camp)
-  CM=res$A
-  pb<-left_join(res$grade.key,data.frame(grade=(-1:12),vac=t(rates.by.grades[1,17:30])),by="grade")
-  left_join(data.frame(g=res$g),pb, by="g")
-  max=colSums[I]
+  df2<-left_join(res$grade.key,data.frame(grade=(-1:12),v=t(rates.by.grades[1,17:30])),by="grade")
+  df3<-left_join(data.frame(g=res$g),df2, by="g")
+  vac=df3$X1
 }
