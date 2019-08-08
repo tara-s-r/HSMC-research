@@ -1,2 +1,5 @@
 load("/Users/tararoshan/Desktop/GitHub/HSMC-research/hsmc2019code/vacRates.RData")
-load("/Users/tararoshan/Desktop/GitHub/HSMC-research/hsmc2019code/vacRates.RData")
+load("/Users/tararoshan/Desktop/GitHub/HSMC-research/hsmc2019code/index.RData")
+file<-load("/Users/tararoshan/Desktop/GitHub/HSMC-research/hsmc2019code/index.RData")
+print(file)
+View(file)
