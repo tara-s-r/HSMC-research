@@ -190,13 +190,13 @@ for(j in (1:5)){
   df2<-left_join(res$grade.key,data.frame(grade=(-1:12),v=t(small[1,17:30])),by="grade")
   df3<-left_join(data.frame(g=res$g),df2, by="g")
   vac=df3$X1
-  
+
   colnames(out)<- c("District", "n.inf", "time.max", "prop.inf")
   for(i in 1:100){
     I=vac.NetworkSIR(CM,tau=0.15,gamma=0.01,vac)$I
     max=max(colSums(I))
     timemax=min((1:dim(I)[2])[colSums(I)==max])
-    out[i,]=c(isd,max,timemax,as.numeric(max/rates.by.grades$totStuD[1]))
+    out[i,]=c(isd,max,timemax,as.numeric(max/rates.by.grades$totStuD[j]))
   }
   if(j==1){
     out.many = out
